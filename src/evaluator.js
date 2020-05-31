@@ -3,6 +3,11 @@ export default function Evaluator() {
     this.input = "";
     this.location = 0;
 };
+function EvaluatorResult(original, result) {
+    this.expression = original;
+    this.result = result;
+    this.error = null;
+}
 
 Evaluator.prototype.has_next = function() {
     return this.location < this.input.length;
@@ -23,9 +28,9 @@ Evaluator.prototype.eval = function(input) {
     this.input = input;
     let result = this.parse_addition(); 
     if (this.has_next()) {
-        throw new Error("Found unexpected value");
+        result = new Error("Found unexpected value");
     }
-    return result;
+    return new EvaluatorResult(input, result);
 };
 
 Evaluator.prototype.parse_addition = function() {
