@@ -1,5 +1,6 @@
 export default function Evaluator() { 
-    this.variables = {};
+    this.variables = {pi: Math.PI, e: Math.E};
+    this.funcs = {sqrt: Math.sqrt, ln: Math.log};
     this.input = "";
     this.location = 0;
 };
@@ -18,7 +19,6 @@ Evaluator.prototype.peek = function() {
 };
 let escape_hatch = -1000;
 Evaluator.prototype.skip_whitespace = function() {
-    
     while (this.has_next() && " \t\n\r".includes(this.peek())) {
         this.location += 1;
     }
@@ -106,6 +106,39 @@ Evaluator.prototype.parse_negative = function() {
 Evaluator.prototype.parse_value = function() {
     console.log("Called parse value");
     this.skip_whitespace();
+    if ("0123456789.".includes(this.peek())) {
+        return this.parse_number();
+    } else if (this.peek() != "") {
+        return this.parse_var();
+    } else {
+        throw new Error("unexpected end of sequence, expected a number or ident");
+    }
+};
+Evaluator.prototype.parse_var = function() {
+    console.log("called parse variable")
+    let val = "";
+    while (!" \n\t\r()".includes(this.peek())){
+        val = val.concat(this.peek());
+        this.location += 1;
+    }
+    this.skip_whitespace();
+    if (this.peek() === "(") {
+        console.log("parsing function");
+        if (Object.keys(this.funcs).includes(val)) {
+            console.log("user called function:", val);
+            return this.funcs[val](this.parse_parentheses());
+        } else {
+            throw new Error("Function: " + val + " not found!");
+        }
+    }
+    else if (Object.keys(this.variables).includes(val)) {
+        return this.variables[val];
+    } else {
+        throw new Error("variable " + val + " not found!");
+    }
+}
+
+Evaluator.prototype.parse_number = function() {
     let val = "";
     let decimal_found = false;
     while ("0123456789.".includes(this.peek()) && this.peek() !== "") {
@@ -121,12 +154,8 @@ Evaluator.prototype.parse_value = function() {
         else if ("0123456789".includes(next)) {
             console.log("Adding to val");
             val = val + next;
-        } else {
-            return parseFloat(val);
         }
-        
     }
-    console.log("val is " + val);
     if (val.length === 0) {
         if (val === "") {
             throw new Error("Unexpected end of sequence!");
@@ -134,6 +163,5 @@ Evaluator.prototype.parse_value = function() {
             throw new Error("Expecting number, found character:" + next);
         }
     }
-    console.log("Parsed val as " + parseFloat(val));
     return parseFloat(val);
-};
+}

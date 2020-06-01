@@ -7,26 +7,27 @@ class Calculator extends React.Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.evalExpression = this.evalExpression.bind(this);
-        this.state = {previous_results: [], evaluator: new Evaluator(), current_expression: ""}
+        this.evaluator = new Evaluator();
+        this.state = {previous_results: [], current_expression: ""}
     }
     handleChange(expression) {
-        this.setState({previous_results: this.state.previous_results, evaluator: new Evaluator(), current_expression: expression.target.value});
+        this.setState({previous_results: this.state.previous_results, current_expression: expression.target.value});
     }
     evalExpression(event) {
         if (event.key === "Enter") {
-            this.setState({previous_results: [...this.state.previous_results, this.state.evaluator.eval(this.state.current_expression)], evaluator: new Evaluator(), current_expression: ""});
+            this.setState({previous_results: [...this.state.previous_results, this.evaluator.eval(this.state.current_expression)], current_expression: ""});
         }
     }
     render() {
         return (
-            <div className="calculator">
-                <div className="previous-calculation">
+        <div className="calculator">
+                <div className="view">
+                    <input type="text" value={this.state.current_expression} onChange={this.handleChange} onKeyPress={this.evalExpression} />
+                </div>
+                <div className="previous">
                     <PreviousCalculation evaluator_results = {this.state.previous_results} />
                 </div>
-                    <div class="expression-input">
-                        <input type="text" value={this.state.current_expression} onChange={this.handleChange} onKeyPress={this.evalExpression} />
-                    </div>
-            </div>
+        </div>  
         );
     }
 }
@@ -34,7 +35,7 @@ class Calculator extends React.Component {
 function PreviousCalculation(props) {
         return (
             props.evaluator_results.map((result) => 
-            <div className="calc-entry">
+            <div className="entry">
                 <span>{result.expression}</span>
                 <span>= {result.result}</span>
             </div>
