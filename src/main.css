@@ -1,4 +1,62 @@
 .calculator {
     display: flex;
     flex-direction: row;
+    font-family: 'Overpass Mono', monospace;
+    margin: auto;
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.key {
+    text-align: center;
+    margin: 2px;
+    padding: 4px;
+    background-color: orange;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.previous {
+    padding: 5px;
+    color: rgb(51, 51, 51);
+    min-width: 200px;
+    height: 165px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-color: rgb(112, 128, 144) rgb(255, 255, 255);
+    scrollbar-width: thin;
+}
+
+.entry {
+    background-color: palegoldenrod;
+    border-radius: 2px;
+    display: flex;
+    justify-content: space-between;
+    padding: 4px;
+    margin-bottom: 2px;
+}
+
+.view input {
+    height: 35px;
+    border-radius: 3px;
+    border: 1px solid rgb(120, 155, 219);
+    font-family: 'Overpass Mono', monospace;
+    vertical-align: bottom;
+    line-height: 35px;
+}
+.previous::-webkit-scrollbar {
+    width: 0.2em;
+  }
+   
+.previous::-webkit-scrollbar-track {
+}
+
+.previous::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid rgb(112, 128, 144);
+    border-radius: 2px;
 }

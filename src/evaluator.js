@@ -44,7 +44,7 @@ Evaluator.prototype.parse_addition = function() {
             values.push(this.parse_multiplication());
         } else if (next === '-') {
             this.location += 1;
-            values.push(this.parse_multiplication());
+            values.push(-1 * this.parse_multiplication());
         } else {
             console.log("Sum is " + values.reduce( (acc, val) => acc + val));
             return values.reduce((acc, val) => acc + val, 0);
